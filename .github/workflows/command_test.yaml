@@ -1,0 +1,25 @@
+# Tests whether the given command exits with a return value of 0.
+#
+# Latest revision: 2025-02-20
+#
+# Created and unlicensed by Mikołaj Bartnicki <mikolaj@bartnicki.org>;
+# please read UNLICENSE file for details.
+
+name: Command test
+
+on:
+  workflow_call:
+    inputs:
+      command_to_test:
+        required: true
+        type: string
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Test the command
+        run: ${{ inputs.command_to_test }}
