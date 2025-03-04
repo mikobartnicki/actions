@@ -1,7 +1,7 @@
 # Tests a shell script execution and checks whether an expected result file is
 # created (if specified).
 #
-# Latest revision: 2026-03-03
+# Latest revision: 2026-03-04
 #
 # Created and unlicensed by Mikołaj Bartnicki <mikolaj@bartnicki.org>;
 # please read UNLICENSE file for details.
@@ -14,7 +14,7 @@ on:
       script_to_test:
         required: true
         type: string
-      result_file_to_check:
+      expected_file:
         required: false
         type: string
 
@@ -26,23 +26,23 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Remove existing previous result file (if any)
-        if: inputs.result_file != ''
-        run: rm -f "${{ inputs.result_file }}"
+        if: inputs.expected_file != ''
+        run: rm -f "${{ inputs.expected_file }}"
 
       - name: Make script executable
-        run: chmod +x "${{ inputs.script_name }}"
+        run: chmod +x "${{ inputs.script_to_test }}"
 
       - name: Execute script
         run: |
-          "${{ inputs.script_name }}"
+          "${{ inputs.script_to_test }}"
           echo "Exited with code: $?"
 
       - name: Check the result file
-        if: inputs.result_file != ''
+        if: inputs.expected_file != ''
         run: |
-          if [ -f "${{ inputs.result_file }}" ]; then
-            echo "${{ inputs.result_file }} created succesfully."
+          if [ -f "${{ inputs.expected_file }}" ]; then
+            echo "${{ inputs.expected_file }} created succesfully."
           else
-            "${{ inputs.result_file }} was not created!" >&2
+            "${{ inputs.expected_file }} was not created!" >&2
             exit 1
           fi
