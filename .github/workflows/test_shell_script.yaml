@@ -1,12 +1,12 @@
-# Tests a Shell script execution and checks whether an expected result file is
+# Tests a shell script execution and checks whether an expected result file is
 # created (if specified).
 #
-# Latest revision: 2026-03-05
+# Latest revision: 2026-03-05 bis
 #
 # Created and unlicensed by Mikołaj Bartnicki <mikolaj@bartnicki.org>;
 # please read UNLICENSE file for details.
 
-name: Test Shell script
+name: Test shell script
 
 on:
   workflow_call:
