@@ -1,11 +1,11 @@
-# Tests whether the given shell command exits with a return value of 0.
+# Tests whether the given Shell command exits with a return value of 0.
 #
-# Latest revision: 2025-03-03
+# Latest revision: 2025-03-05
 #
 # Created and unlicensed by Mikołaj Bartnicki <mikolaj@bartnicki.org>;
 # please read UNLICENSE file for details.
 
-name: Test shell command
+name: Test Shell command
 
 on:
   workflow_call:
