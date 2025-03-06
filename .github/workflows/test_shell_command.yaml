@@ -5,7 +5,7 @@
 # - is_script: if true, treats command_to_test as a script and makes it executable.
 # - expected_file: optional path to a file that should be created.
 #
-# Latest revision: 2026-03-06
+# Latest revision: 2025-03-06
 #
 # Created and unlicensed by Mikołaj Bartnicki <mikolaj@bartnicki.org>;
 # please read UNLICENSE file for details.
