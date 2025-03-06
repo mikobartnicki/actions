@@ -1,11 +1,12 @@
 # Workflow for testing shell commands and scripts.
 #
 # Inputs:
-# - command_to_test: the command or script path to execute (required).
-# - is_script: if true, treats command_to_test as a script and makes it executable.
+# - command_to_test (required): the command or script path to execute.
+# - is_script: if true, treats command_to_test as a script and makes it
+#   executable.
 # - expected_file: optional path to a file that should be created.
 #
-# Latest revision: 2025-03-06
+# Latest revision: 2025-03-06 bis
 #
 # Created and unlicensed by Mikołaj Bartnicki <mikolaj@bartnicki.org>;
 # please read UNLICENSE file for details.
@@ -44,7 +45,8 @@ jobs:
 
       - name: Execute command
         run: |
-          "${{ inputs.command_to_test }}"
+          # Don't use double quotes to allow command with arguments.
+          ${{ inputs.command_to_test }}
           echo "Exited with code: $?"
 
       - name: Check expected file
