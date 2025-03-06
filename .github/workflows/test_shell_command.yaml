@@ -38,16 +38,16 @@ jobs:
         if: inputs.expected_file != ''
         run: rm -f "${{ inputs.expected_file }}"
 
-      - name: Make the script executable
+      - name: Make script executable
         if: inputs.is_script
         run: chmod +x "${{ inputs.command_to_test }}"
 
-      - name: Execute the command
+      - name: Execute command
         run: |
           "${{ inputs.command_to_test }}"
           echo "Exited with code: $?"
 
-      - name: Check the expected file
+      - name: Check expected file
         if: inputs.expected_file != ''
         run: |
           if [ -f "${{ inputs.expected_file }}" ]; then
