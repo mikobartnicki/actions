@@ -47,7 +47,7 @@ jobs:
           "${{ inputs.command_to_test }}"
           echo "Exited with code: $?"
 
-      - name: Check the result file
+      - name: Check the expected file
         if: inputs.expected_file != ''
         run: |
           if [ -f "${{ inputs.expected_file }}" ]; then
