@@ -1,6 +1,11 @@
-# Tests whether the given shell command exits with a return value of 0.
+# Workflow for testing shell commands and scripts.
 #
-# Latest revision: 2025-03-05 bis
+# Inputs:
+# - command_to_test: the command or script path to execute (required).
+# - is_script: if true, treats command_to_test as a script and makes it executable.
+# - expected_file: optional path to a file that should be created.
+#
+# Latest revision: 2026-03-06
 #
 # Created and unlicensed by Mikołaj Bartnicki <mikolaj@bartnicki.org>;
 # please read UNLICENSE file for details.
@@ -13,6 +18,14 @@ on:
       command_to_test:
         required: true
         type: string
+      is_script:
+        required: false
+        type: boolean
+        default: false
+      expected_file:
+        required: false
+        type: string
+        default: ''
 
 jobs:
   test:
@@ -21,5 +34,25 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Test the command
-        run: ${{ inputs.command_to_test }}
+      - name: Remove existing previous result file (if any)
+        if: inputs.expected_file != ''
+        run: rm -f "${{ inputs.expected_file }}"
+
+      - name: Make the script executable
+        if: inputs.is_script
+        run: chmod +x "${{ inputs.command_to_test }}"
+
+      - name: Execute the command
+        run: |
+          "${{ inputs.command_to_test }}"
+          echo "Exited with code: $?"
+
+      - name: Check the result file
+        if: inputs.expected_file != ''
+        run: |
+          if [ -f "${{ inputs.expected_file }}" ]; then
+            echo "${{ inputs.expected_file }} created succesfully."
+          else
+            "${{ inputs.expected_file }} was not created!" >&2
+            exit 1
+          fi
