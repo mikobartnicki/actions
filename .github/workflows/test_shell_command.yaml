@@ -4,9 +4,11 @@
 # - command_to_test (required): the command or script path to execute.
 # - is_script: if true, treats command_to_test as a script and makes it
 #   executable.
+# - packages_to_install: optional space-separated list of Ubuntu packages to
+#   install before running the test.
 # - expected_file: optional path to a file that should be created.
 #
-# Latest revision: 2025-03-06 bis
+# Latest revision: 2025-03-08
 #
 # Created and unlicensed by Mikołaj Bartnicki <mikolaj@bartnicki.org>;
 # please read UNLICENSE file for details.
@@ -23,6 +25,10 @@ on:
         required: false
         type: boolean
         default: false
+      packages_to_install:
+        required: false
+        type: string
+        default: ''
       expected_file:
         required: false
         type: string
@@ -34,6 +40,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Install required packages
+        if: inputs.packages_to_install != ''
+        run: |
+          sudo apt update
+          # Don't use double quotes to allow multiple packages
+          sudo apt install -y ${{ inputs.packages_to_install }}
 
       - name: Remove existing previous result file (if any)
         if: inputs.expected_file != ''
