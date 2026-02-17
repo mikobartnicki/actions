@@ -1,0 +1,71 @@
+# Workflow for testing shell commands or executable scripts.
+#
+# Inputs:
+# - command_to_test: (required) the command or script path to execute.
+# - is_script: when true, marks command_to_test as executable before running it.
+# - packages_to_install: optional space-separated list of Ubuntu packages to install.
+# - expected_file: optional path to a file expected to be created by the command.
+#
+# Latest revision: 2026-02-17
+#
+# Created and unlicensed by Mikołaj Bartnicki <mikolaj@bartnicki.org>;
+# please read UNLICENSE file for details.
+
+name: Test shell command
+
+on:
+  workflow_call:
+    inputs:
+      command_to_test:
+        required: true
+        type: string
+      is_script:
+        required: false
+        type: boolean
+        default: false
+      packages_to_install:
+        required: false
+        type: string
+        default: ''
+      expected_file:
+        required: false
+        type: string
+        default: ''
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install required packages
+        if: inputs.packages_to_install != ''
+        run: |
+          sudo apt update
+          # Don't use double quotes to allow multiple packages
+          sudo apt install -y ${{ inputs.packages_to_install }}
+
+      - name: Remove existing previous result file (if any)
+        if: inputs.expected_file != ''
+        run: rm -f "${{ inputs.expected_file }}"
+
+      - name: Make script executable
+        if: inputs.is_script
+        run: chmod +x "${{ inputs.command_to_test }}"
+
+      - name: Execute command
+        run: |
+          # Don't use double quotes to allow command with arguments.
+          ${{ inputs.command_to_test }}
+          echo "Exited with code: $?"
+
+      - name: Check expected file
+        if: inputs.expected_file != ''
+        run: |
+          if [ -f "${{ inputs.expected_file }}" ]; then
+            echo "${{ inputs.expected_file }} created successfully."
+          else
+            echo "${{ inputs.expected_file }} was not created!" >&2
+            exit 1
+          fi
